@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
+import { addContact } from '../../redux/contacts/contacts-actions';
 import styles from './ContactForm.module.css';
 
 const INITIAL_STATE = {
@@ -68,4 +70,21 @@ class ContactForm extends Component {
   }
 }
 
-export default ContactForm;
+const duplicateContactCheck = items => {
+  const value = items.name.toLowerCase();
+  const nameCheck = items.find(item => item.name.toLowerCase().includes(value));
+
+  nameCheck
+    ? alert(`${nameCheck.name} is already in contacts`)
+    : addContact(items);
+};
+
+const mapStateToProps = ({ contacts: { items } }) => ({
+  contacts: duplicateContactCheck(items),
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSubmit: subContact => dispatch(duplicateContactCheck(subContact)),
+});
+
+export default connect(null, mapDispatchToProps)(ContactForm);
