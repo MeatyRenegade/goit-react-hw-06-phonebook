@@ -1,20 +1,12 @@
-import { ADD, DELETE, HANDLE_CHANGE } from './contacts-types';
 import shortid from 'shortid';
+import { createAction } from '@reduxjs/toolkit';
 
-export const addContact = text => ({
-  type: ADD,
+export const addContact = createAction('contacts/add', text => ({
   payload: {
     id: shortid.generate(),
     text,
   },
-});
+}));
 
-export const deleteContact = id => ({
-  type: DELETE,
-  payload: id,
-});
-
-export const handleChange = value => ({
-  type: HANDLE_CHANGE,
-  payload: value,
-});
+export const deleteContact = createAction('contacts/delete');
+export const handleChange = createAction('contacts/handleChange');

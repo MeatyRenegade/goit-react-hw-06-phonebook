@@ -1,12 +1,8 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { addContact } from '../../redux/contacts/contacts-actions';
 import styles from './ContactForm.module.css';
-
-const INITIAL_STATE = {
-  name: '',
-  number: '',
-};
 
 class ContactForm extends Component {
   state = {
@@ -21,17 +17,16 @@ class ContactForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
     this.props.onSubmit(this.state);
-
     this.formReset();
   };
 
   formReset = () => {
-    this.setState({ ...INITIAL_STATE });
+    this.setState({ name: '', number: '' });
   };
 
   render() {
+    const { name, number } = this.state;
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
         <label>
@@ -44,7 +39,7 @@ class ContactForm extends Component {
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
             required
-            value={this.state.name}
+            value={name}
             onChange={this.handleChange}
           />
         </label>
@@ -56,9 +51,10 @@ class ContactForm extends Component {
             name="number"
             placeholder="+371-123-123-123"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
+            title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может 
+             с +"
             required
-            value={this.state.number}
+            value={number}
             onChange={this.handleChange}
           />
         </label>
@@ -70,21 +66,12 @@ class ContactForm extends Component {
   }
 }
 
-const duplicateContactCheck = items => {
-  const value = items.name.toLowerCase();
-  const nameCheck = items.find(item => item.name.toLowerCase().includes(value));
-
-  nameCheck
-    ? alert(`${nameCheck.name} is already in contacts`)
-    : addContact(items);
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ contacts: { items } }) => ({
-  contacts: duplicateContactCheck(items),
-});
-
 const mapDispatchToProps = dispatch => ({
-  onSubmit: subContact => dispatch(duplicateContactCheck(subContact)),
+  onSubmit: allContacts => dispatch(addContact(allContacts)),
 });
 
 export default connect(null, mapDispatchToProps)(ContactForm);

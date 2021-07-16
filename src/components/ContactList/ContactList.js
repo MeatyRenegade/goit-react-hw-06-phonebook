@@ -22,7 +22,7 @@ const ContactList = ({ contacts, onDeleteContact }) => (
 );
 
 ContactList.propTypes = {
-  filteredContacts: PropTypes.func.isRequired,
+  contacts: PropTypes.array,
   onDeleteContact: PropTypes.func.isRequired,
 };
 
@@ -40,7 +40,6 @@ const mapStateToProps = ({ contacts: { items, filter } }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onDeleteContact: id => dispatch(deleteContact(id)),
-  filteredContacts: () => null,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
