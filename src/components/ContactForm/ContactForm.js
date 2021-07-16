@@ -15,9 +15,23 @@ class ContactForm extends Component {
     this.setState({ [name]: value });
   };
 
+  duplicateContactCheck = (array, name) => {
+    return array.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase(),
+    );
+  };
+
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
+    const { name } = this.state;
+    const { onSubmit, contacts } = this.props;
+
+    const duplicateContact = this.duplicateContactCheck(contacts, name);
+
+    duplicateContact
+      ? alert(`${name} is already in contacts`)
+      : onSubmit(this.state);
+
     this.formReset();
   };
 
@@ -27,10 +41,11 @@ class ContactForm extends Component {
 
   render() {
     const { name, number } = this.state;
+
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
         <label>
-          Name:{' '}
+          Contact:{' '}
           <input
             className={styles.input}
             type="text"
@@ -51,7 +66,7 @@ class ContactForm extends Component {
             name="number"
             placeholder="+371-123-123-123"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может 
+            title="Номер телефона должен состоять из цифр и может содержать пробелы, тире, круглые скобки и может 
              с +"
             required
             value={number}
@@ -70,8 +85,12 @@ ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = ({ contacts: { items } }) => ({
+  contacts: items,
+});
+
 const mapDispatchToProps = dispatch => ({
   onSubmit: allContacts => dispatch(addContact(allContacts)),
 });
 
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

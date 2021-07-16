@@ -10,6 +10,7 @@ const store = configureStore({
   },
   middleware,
   devTools: process.env.NODE_ENV === 'development',
+  logger: process.env.NODE_ENV === 'development',
 });
 
 export default store;

@@ -5,7 +5,7 @@ import styles from './ContactList.module.css';
 
 const ContactList = ({ contacts, onDeleteContact }) => (
   <ul className={styles.ContactList}>
-    {contacts.map(({ id, text: { name, number } }) => (
+    {contacts.map(({ id, name, number }) => (
       <li className={styles.ContactList_item} key={id}>
         <p className={styles.ContactList_text}>{name}</p>
         <p className={styles.ContactList_text}>{number}</p>
@@ -26,10 +26,10 @@ ContactList.propTypes = {
   onDeleteContact: PropTypes.func.isRequired,
 };
 
-const handleFilteredContacts = (allContacts, filter) => {
+const handleFilteredContacts = (items, filter) => {
   const normalizedFilter = filter.toLowerCase();
 
-  return allContacts.filter(({ text: { name } }) =>
+  return items.filter(({ name }) =>
     name.toLowerCase().includes(normalizedFilter),
   );
 };
